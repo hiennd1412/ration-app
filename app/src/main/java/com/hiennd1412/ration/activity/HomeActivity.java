@@ -15,7 +15,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,6 +43,11 @@ public class HomeActivity extends BaseActivity {
     ListView listView;
     TextView tvCurrentLocation;
     ImageView deliverPointImage;
+    Button btCheckByPhoneNumber;
+    Button btCheckById;
+    ListView phoneNumberListView;
+    ViewGroup checkIdentityHistoryView;
+
 
     ListAdapter_ReceivedCallList listViewAdapter;
     DeliverPointModel currentWorkingLocation;
@@ -52,6 +59,10 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
         tvCurrentLocation = (TextView) findViewById(R.id.tvCurrentLocation);
         deliverPointImage = (ImageView) findViewById(R.id.deliver_point_image);
+        btCheckByPhoneNumber = (Button) findViewById(R.id.bt_check_by_phone_number);
+        btCheckById = (Button) findViewById(R.id.bt_check_by_identity_number);
+        phoneNumberListView = (ListView) findViewById(R.id.phone_number_list_view);
+        checkIdentityHistoryView = (ViewGroup) findViewById(R.id.check_identity_number_view_group);
         setupListview();
     }
 
@@ -177,7 +188,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupListview() {
-        listView = findViewById(R.id.lamp_listview);
+        listView = findViewById(R.id.phone_number_list_view);
         listViewAdapter = new ListAdapter_ReceivedCallList(this);
         listView.setAdapter(listViewAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -206,6 +217,24 @@ public class HomeActivity extends BaseActivity {
     public void onChangeLocationButtonClicked(View v) {
         Intent intent = new Intent(HomeActivity.this, ChooseLocationActivity.class);
         startActivity(intent);
+    }
+
+    public void onCheckByPhoneNumberTabButtonClicked(View v) {
+        btCheckById.setBackgroundResource(R.color.colorTabButtonInactiveBackground);
+        btCheckByPhoneNumber.setBackgroundResource(R.color.buttonColor);
+        phoneNumberListView.setVisibility(View.VISIBLE);
+        checkIdentityHistoryView.setVisibility(View.GONE);
+    }
+
+   public void onCheckByIdentityNumberTabButtonClicked(View v) {
+       btCheckById.setBackgroundResource(R.color.buttonColor);
+       btCheckByPhoneNumber.setBackgroundResource(R.color.colorTabButtonInactiveBackground);
+       phoneNumberListView.setVisibility(View.GONE);
+       checkIdentityHistoryView.setVisibility(View.VISIBLE);
+    }
+    public void onCheckIdentityNumberButtonClicked(View v) {
+
+        Toast.makeText(this, "Implementing", Toast.LENGTH_LONG).show();
     }
 
 }

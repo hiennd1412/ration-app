@@ -9,6 +9,7 @@
     <color name="transparent">#00ffffff</color>
 
     <color name="colorHomeButtonBackground">#43F3E3</color>
+    <color name="colorTabButtonInactiveBackground">#43F3E3</color>
     <color name="classActionProgressBackground">#80FB7F58</color>
     <color name="light_gray">#DFDCDC</color>
 

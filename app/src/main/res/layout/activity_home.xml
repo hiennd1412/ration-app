@@ -10,7 +10,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="170dp"
         android:background="@color/colorPrimary">
         <TextView
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="45dp"
             android:text="Địa điểm hiện tại của bạn:"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -38,7 +38,7 @@
             android:layout_width="60dp"
             android:layout_height="30dp"
             android:layout_marginRight="90dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="40dp"
             android:text="Đổi"
             android:textSize="15sp"
             android:textStyle="normal"
@@ -52,7 +52,7 @@
             android:layout_width="70dp"
             android:layout_height="30dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="40dp"
             android:text="Thêm"
             android:textSize="15sp"
             android:textStyle="normal"
@@ -65,7 +65,7 @@
 
         <ImageView
             android:id="@+id/deliver_point_image"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="75dp"
             android:layout_marginRight="15dp"
             android:layout_width="135dp"
             android:layout_height="90dp"
@@ -87,12 +87,95 @@
             android:textStyle="italic" />
     </FrameLayout>
 
-    <ListView
-        android:id="@+id/lamp_listview"
-        android:layout_marginTop="5dp"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp">
+            <Button
+                android:id="@+id/bt_check_by_phone_number"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Kiểm tra bằng sđt"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:background="@color/buttonColor"
+                android:onClick="onCheckByPhoneNumberTabButtonClicked"/>
+            <Button
+                android:id="@+id/bt_check_by_identity_number"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Kiểm tra bằng cmt"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:background="@color/colorTabButtonInactiveBackground"
+                android:onClick="onCheckByIdentityNumberTabButtonClicked"/>
+
+        </LinearLayout>
+
+
+        <ListView
+            android:id="@+id/phone_number_list_view"
+            android:layout_marginTop="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            />
+
+        <LinearLayout
+            android:id="@+id/check_identity_number_view_group"
+            android:layout_marginTop="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="Nhập số chứng minh thư:"
+                android:textSize="16sp"
+                android:textColor="@color/labeTextColor"/>
+            <EditText
+                android:id="@+id/tf_identity_number"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:padding="5dp"
+                android:background="@drawable/edit_text_background"
+                android:textColor="@color/white"
+                android:textCursorDrawable="@null"
+                android:text=""
+                />
+
+            <Button
+                android:id="@+id/bt_check_identity"
+                android:layout_width="180dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="right"
+                android:text="Xem lịch sử nhận quà"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:background="@drawable/button_background_red"
+                android:onClick="onCheckIdentityNumberButtonClicked"/>
+
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
 
 </LinearLayout>

@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Charity Helper</string>
+
+    <!-- share preference keys -->
+    <string name="common_preference">common_preference</string>
+    <string name="choosen_location">choosen location</string>
+
+    <!-- intent extra key -->
+    <string name="phone_number_to_check">phone_number_to_check</string>
+    <string name="current_deliver_point">current_deliver_point</string>
+
+    <!-- general message -->
+    <string name="connect_internet_require_message">Bạn cần kết nối internet để thực hiện chức năng này</string>
+    <string name="connect_internet_alert_message">Bạn vui lòng kiểm tra kết nối Internet</string>
+
+    <string name="underline_dang_ky"><u> Đăng ký </u></string>
+    <string name="underline_forgot_password"><u> Quên mật khẩu </u></string>
+
+
+</resources>

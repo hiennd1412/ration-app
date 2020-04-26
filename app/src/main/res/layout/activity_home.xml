@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_image"
+    android:orientation="vertical"
+    tools:context=".activity.HomeActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@color/colorPrimary">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:text="Charity Helper"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="50dp"
+            android:text="Địa điểm hiện tại của bạn:"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="90dp"
+            android:layout_marginTop="45dp"
+            android:text="Đổi"
+            android:textSize="15sp"
+            android:textStyle="normal"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:layout_gravity="right"
+            android:textAllCaps="false"
+            android:onClick="onChangeLocationButtonClicked"
+            />
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="45dp"
+            android:text="Thêm"
+            android:textSize="15sp"
+            android:textStyle="normal"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:layout_gravity="right"
+            android:textAllCaps="false"
+            android:onClick="onAddNewLocationButtonClicked"
+            />
+
+        <ImageView
+            android:id="@+id/deliver_point_image"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="135dp"
+            android:layout_height="90dp"
+            android:layout_gravity="right"
+            android:src="@drawable/giving_to_charity_blog_size"
+            android:scaleType="fitXY"
+            />
+
+        <TextView
+            android:id="@+id/tvCurrentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="165dp"
+            android:text="Điểm phát Ngã tư sở\nsố 39 đường láng"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/lamp_listview"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        />
+
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -18,22 +19,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.error.AuthFailureError;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.StringRequest;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.hiennd1412.ration.Entity.AllocationModel;
 import com.hiennd1412.ration.Entity.CallLogModel;
 import com.hiennd1412.ration.Entity.DeliverPointModel;
 import com.hiennd1412.ration.R;
 import com.hiennd1412.ration.Utils.Utils;
+import com.hiennd1412.ration.WebserviceGeneralManage.VolleyRequest;
 import com.hiennd1412.ration.WebserviceGeneralManage.WebserviceInfors;
 import com.hiennd1412.ration.adapter.ListAdapter_ReceivedCallList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeActivity extends BaseActivity {
 
@@ -47,7 +63,7 @@ public class HomeActivity extends BaseActivity {
     Button btCheckById;
     ListView phoneNumberListView;
     ViewGroup checkIdentityHistoryView;
-
+    EditText tfIdentityNumber;
 
     ListAdapter_ReceivedCallList listViewAdapter;
     DeliverPointModel currentWorkingLocation;
@@ -63,12 +79,18 @@ public class HomeActivity extends BaseActivity {
         btCheckById = (Button) findViewById(R.id.bt_check_by_identity_number);
         phoneNumberListView = (ListView) findViewById(R.id.phone_number_list_view);
         checkIdentityHistoryView = (ViewGroup) findViewById(R.id.check_identity_number_view_group);
+        tfIdentityNumber = (EditText) findViewById(R.id.tf_identity_number);
         setupListview();
+
+        String currentWorkingLocationInfo = Utils.getCommonSharepreference(this).getString(getString(R.string.choosen_location), "");
+        fillSelectedLocation();
+        checkSelectedLocationStatus();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         fillSelectedLocation();
         if ( checkAccessCallogPermission() ) {
             listCallLog = getCallDetails();
@@ -169,6 +191,74 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    private void checkSelectedLocationStatus() {
+        if(!Utils.hasInternetConnection(HomeActivity.this)) {
+            Toast.makeText(HomeActivity.this, HomeActivity.this.getResources().getString(R.string.connect_internet_alert_message), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        showProgressDialog();
+        RequestQueue queue = VolleyRequest.getInstance(HomeActivity.this).getRequestQueue();
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebserviceInfors.base_host_service + WebserviceInfors.checkDeliverPointValid,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e(TAG, response);
+                        HomeActivity.this.hideProgressDialog();
+                        final ArrayList<AllocationModel> allocationList = new ArrayList<>();
+
+                        try {
+                            JSONObject jsResponse = new JSONObject(response);
+                            if (jsResponse.getInt("code") == 999) {
+                                allocationList.clear();
+                                Integer locationStatus = jsResponse.getInt("data");
+                                if(locationStatus != 1) {
+                                    Toast.makeText(HomeActivity.this, "Điểm làm việc hiện tại của bạn không hợp lệ. Vui lòng chọn lại.", Toast.LENGTH_LONG).show();
+                                    SharedPreferences.Editor sharePreferenceEditor = Utils.getCommonSharepreference(HomeActivity.this).edit();
+                                    sharePreferenceEditor.putString(HomeActivity.this.getResources().getString(R.string.choosen_location),"");
+                                    sharePreferenceEditor.commit();
+                                    HomeActivity.this.fillSelectedLocation();
+                                }
+                            }
+                            else {
+                                Toast.makeText(HomeActivity.this,jsResponse.getString("content"), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        HomeActivity.this.hideProgressDialog();
+                        Log.e(TAG, "onErrorResponse: " + error.toString());
+//                        Toast.makeText(CheckingPhoneNumberResultActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("deliver_point_to_check", HomeActivity.this.currentWorkingLocation._id);
+                return params;
+            }
+
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String>  params = new HashMap<>();
+//                SharedPreferences sharedPreferences = Utils.getCommonSharepreference(CheckingPhoneNumberResultActivity.this);
+//                params.put("x-access-token", sharedPreferences.getString(getResources().getString(R.string.login_token),""));
+//                return params;
+//            }
+
+        };
+        queue.getCache().clear();
+        queue.add(stringRequest);
+    }
     private void fillSelectedLocation() {
         String currentWorkingLocationInfo = Utils.getCommonSharepreference(this).getString(getString(R.string.choosen_location), "");
         if (currentWorkingLocationInfo.equals("")) {
@@ -226,15 +316,25 @@ public class HomeActivity extends BaseActivity {
         checkIdentityHistoryView.setVisibility(View.GONE);
     }
 
-   public void onCheckByIdentityNumberTabButtonClicked(View v) {
+    public void onCheckByIdentityNumberTabButtonClicked(View v) {
        btCheckById.setBackgroundResource(R.color.buttonColor);
        btCheckByPhoneNumber.setBackgroundResource(R.color.colorTabButtonInactiveBackground);
        phoneNumberListView.setVisibility(View.GONE);
        checkIdentityHistoryView.setVisibility(View.VISIBLE);
     }
+
     public void onCheckIdentityNumberButtonClicked(View v) {
 
-        Toast.makeText(this, "Implementing", Toast.LENGTH_LONG).show();
+        String identityNumber = tfIdentityNumber.getText().toString().trim();
+        if(identityNumber.equals("")) {
+            Toast.makeText(this, "Bạn chưa nhập số chứng minh thư!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Intent intent = new Intent(HomeActivity.this, CheckingGuestReceivedHistoryActivity.class);
+        intent.putExtra(getString(R.string.identity_number_to_check), identityNumber);
+        intent.putExtra(getString(R.string.current_deliver_point), currentWorkingLocation._id);
+        startActivity(intent);
+
     }
 
 }

@@ -155,6 +155,7 @@
                 android:textColor="@color/white"
                 android:textCursorDrawable="@null"
                 android:text=""
+                android:inputType="number"
                 />
 
             <Button

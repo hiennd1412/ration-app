@@ -37,7 +37,8 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
     TextView tvPhoneNumber;
     TextView tvNoHistory;
     ListView listView;
-    String numberToCheck;
+    String phoneNumberToCheck;
+    String identityNumberToCheck;
     String currentDeliverPointId;
 
     ListAdapter_AllocationlList listViewAdapter;
@@ -52,9 +53,15 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
         tvNoHistory = (TextView) findViewById(R.id.tv_no_history);
         listView = (ListView) findViewById(R.id.lv_received_history);
 
-        numberToCheck = getIntent().getStringExtra(getString(R.string.phone_number_to_check));
+        phoneNumberToCheck = getIntent().getStringExtra(getString(R.string.phone_number_to_check));
+        identityNumberToCheck = getIntent().getStringExtra(getString(R.string.identity_number_to_check));
         currentDeliverPointId = getIntent().getStringExtra(getString(R.string.current_deliver_point));
-        tvPhoneNumber.setText(numberToCheck);
+        if(phoneNumberToCheck == null) {
+            tvPhoneNumber.setText(identityNumberToCheck);
+        }
+        else {
+            tvPhoneNumber.setText(phoneNumberToCheck);
+        }
         setupListview();
         getHistory();
     }
@@ -80,8 +87,13 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
         showProgressDialog();
         RequestQueue queue = VolleyRequest.getInstance(CheckingGuestReceivedHistoryActivity.this).getRequestQueue();
 
+        String serviceToCall = WebserviceInfors.checkGuestAllocatedWithPhoneNumber;
+        if(phoneNumberToCheck == null) {
+            serviceToCall = WebserviceInfors.checkGuestAllocatedWithIdentityNumber;
+        }
+
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebserviceInfors.base_host_service + WebserviceInfors.checkGuestAllocated,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebserviceInfors.base_host_service + serviceToCall,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -136,7 +148,8 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("guest_phone_number", CheckingGuestReceivedHistoryActivity.this.numberToCheck);
+                params.put("guest_phone_number", CheckingGuestReceivedHistoryActivity.this.phoneNumberToCheck);
+                params.put("guest_identify_number", CheckingGuestReceivedHistoryActivity.this.identityNumberToCheck);
                 return params;
             }
 
@@ -163,8 +176,14 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
         RequestQueue queue = VolleyRequest.getInstance(CheckingGuestReceivedHistoryActivity.this).getRequestQueue();
         showProgressDialog();
 
+        String serviceToCall = WebserviceInfors.giveGiftForGuestWithPhoneNumber;
+
+        if(phoneNumberToCheck == null) {
+            serviceToCall = WebserviceInfors.giveGiftForGuestWithIdentifyNumber;
+        }
+
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebserviceInfors.base_host_service + WebserviceInfors.giveGiftForGuest,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebserviceInfors.base_host_service + serviceToCall,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -198,7 +217,8 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("guestPhoneNumber", CheckingGuestReceivedHistoryActivity.this.numberToCheck);
+                params.put("guestPhoneNumber", CheckingGuestReceivedHistoryActivity.this.phoneNumberToCheck);
+                params.put("guestIdentifyNumber", CheckingGuestReceivedHistoryActivity.this.identityNumberToCheck);
                 params.put("deliverPoint", CheckingGuestReceivedHistoryActivity.this.currentDeliverPointId);
                 return params;
             }
@@ -228,9 +248,5 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
     public void onRefuseButtonClicked(View v) {
         finish();
     }
-
-
-
-
 
 }

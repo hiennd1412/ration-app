@@ -7,6 +7,7 @@ public class AllocationModel {
     public Date allowcationTime;
     public String productInfo;
     public String guestPhoneNumber;
+    public String guestIdentifyNumber;
     public DeliverPointModel deliverPoint;
 
 }

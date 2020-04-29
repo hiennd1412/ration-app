@@ -7,6 +7,7 @@
 
     <!-- intent extra key -->
     <string name="phone_number_to_check">phone_number_to_check</string>
+    <string name="identity_number_to_check">identity_number_to_check</string>
     <string name="current_deliver_point">current_deliver_point</string>
 
     <!-- general message -->

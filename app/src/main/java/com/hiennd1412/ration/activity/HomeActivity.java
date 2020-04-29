@@ -325,6 +325,11 @@ public class HomeActivity extends BaseActivity {
 
     public void onCheckIdentityNumberButtonClicked(View v) {
 
+        if (currentWorkingLocation == null) {
+            Toast.makeText(HomeActivity.this, "Xin vui lòng chọn điểm làm việc để sử dụng tính năng này", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String identityNumber = tfIdentityNumber.getText().toString().trim();
         if(identityNumber.equals("")) {
             Toast.makeText(this, "Bạn chưa nhập số chứng minh thư!", Toast.LENGTH_LONG).show();

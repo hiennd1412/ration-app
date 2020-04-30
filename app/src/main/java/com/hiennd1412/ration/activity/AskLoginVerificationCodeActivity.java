@@ -83,9 +83,10 @@ public class AskLoginVerificationCodeActivity extends BaseActivity {
                             // Sign in failed, display a message and update the UI
                             Log.e(TAG, "signInWithCredential:failure", task.getException());
                             hideProgressDialog();
+                            Toast.makeText(AskLoginVerificationCodeActivity.this, "Mã đăng nhập của bạn không đúng!", Toast.LENGTH_LONG).show();
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
-                                Toast.makeText(AskLoginVerificationCodeActivity.this, "Mã đăng nhập của bạn không đúng!", Toast.LENGTH_LONG).show();
+
                             }
                         }
                     }

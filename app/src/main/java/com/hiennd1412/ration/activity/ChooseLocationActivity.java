@@ -203,6 +203,8 @@ public class ChooseLocationActivity extends BaseActivity {
                 //     detect the incoming verification SMS and perform verification without
                 //     user action.
                 Log.d(TAG, "onVerificationCompleted:" + credential);
+                hideProgressDialog();
+                Toast.makeText(ChooseLocationActivity.this, "verification completed", Toast.LENGTH_LONG).show();
 
 //                         signInWithPhoneAuthCredential(credential);
             }
@@ -213,6 +215,8 @@ public class ChooseLocationActivity extends BaseActivity {
                 // for instance if the the phone number format is not valid.
                 Log.w(TAG, "onVerificationFailed", e);
 
+                hideProgressDialog();
+                Toast.makeText(ChooseLocationActivity.this, "verification failed", Toast.LENGTH_LONG).show();
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                     // ...
@@ -235,7 +239,7 @@ public class ChooseLocationActivity extends BaseActivity {
                 // Save verification ID and resending token so we can use them later
 //                         mVerificationId = verificationId;
 //                         mResendToken = token;
-
+                hideProgressDialog();
                 Gson gson = new Gson();
                 String chooseDeliverPoint = gson.toJson(aDeliverPointModel);
 

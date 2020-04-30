@@ -16,4 +16,5 @@ public class DeliverPointModel {
     public String location;
     public String closeTime;
     public String image;
+    public String phonenumber;
 }

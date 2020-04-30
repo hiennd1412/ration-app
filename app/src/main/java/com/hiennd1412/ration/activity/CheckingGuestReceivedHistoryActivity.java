@@ -20,7 +20,7 @@ import com.hiennd1412.ration.R;
 import com.hiennd1412.ration.Utils.Utils;
 import com.hiennd1412.ration.WebserviceGeneralManage.VolleyRequest;
 import com.hiennd1412.ration.WebserviceGeneralManage.WebserviceInfors;
-import com.hiennd1412.ration.adapter.ListAdapter_AllocationlList;
+import com.hiennd1412.ration.adapter.ListAdapter_AllocationList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +41,7 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
     String identityNumberToCheck;
     String currentDeliverPointId;
 
-    ListAdapter_AllocationlList listViewAdapter;
+    ListAdapter_AllocationList listViewAdapter;
 
     ArrayList<AllocationModel> allocationList;
 
@@ -68,7 +68,7 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
 
     private void setupListview() {
         listView = findViewById(R.id.lv_received_history);
-        listViewAdapter = new ListAdapter_AllocationlList(this);
+        listViewAdapter = new ListAdapter_AllocationList(this);
         listView.setAdapter(listViewAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

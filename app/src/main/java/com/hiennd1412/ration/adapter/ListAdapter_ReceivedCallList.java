@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hiennd1412.ration.Entity.CallLogModel;
-import com.hiennd1412.ration.Entity.LampModel;
 import com.hiennd1412.ration.R;
 import com.hiennd1412.ration.Utils.Utils;
 

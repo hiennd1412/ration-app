@@ -4,15 +4,16 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.CallLog;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,14 +27,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.gson.Gson;
 import com.hiennd1412.ration.Entity.DeliverPointModel;
-import com.hiennd1412.ration.Entity.SessionModel;
 import com.hiennd1412.ration.R;
 import com.hiennd1412.ration.Utils.Utils;
 import com.hiennd1412.ration.WebserviceGeneralManage.VolleyRequest;
@@ -47,6 +55,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class ChooseLocationActivity extends BaseActivity {
 
@@ -54,6 +63,18 @@ public class ChooseLocationActivity extends BaseActivity {
 
     ListView listView;
     ListAdapter_DeliverPointList listViewAdapter;
+    DeliverPointModel selectedDeliverPoint;
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getStringExtra("ChooseLocation");
+            if(message.equals("success")) {
+                ChooseLocationActivity.this.finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +82,14 @@ public class ChooseLocationActivity extends BaseActivity {
         setContentView(R.layout.activity_choose_location);
         setupListview();
         getDeliverPointList();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,new IntentFilter("ChooseLocationFinish"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
 
     private void setupListview() {
@@ -155,6 +184,76 @@ public class ChooseLocationActivity extends BaseActivity {
         queue.getCache().clear();
         queue.add(stringRequest);
 
+    }
+
+    public void doVerifyUserByPhoneNumber(final DeliverPointModel aDeliverPointModel) {
+
+        selectedDeliverPoint = aDeliverPointModel;
+
+        showProgressDialog();
+
+        PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential credential) {
+                // This callback will be invoked in two situations:
+                // 1 - Instant verification. In some cases the phone number can be instantly
+                //     verified without needing to send or enter a verification code.
+                // 2 - Auto-retrieval. On some devices Google Play services can automatically
+                //     detect the incoming verification SMS and perform verification without
+                //     user action.
+                Log.d(TAG, "onVerificationCompleted:" + credential);
+
+//                         signInWithPhoneAuthCredential(credential);
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                // This callback is invoked in an invalid request for verification is made,
+                // for instance if the the phone number format is not valid.
+                Log.w(TAG, "onVerificationFailed", e);
+
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    // Invalid request
+                    // ...
+                } else if (e instanceof FirebaseTooManyRequestsException) {
+                    // The SMS quota for the project has been exceeded
+                    // ...
+                }
+                // Show a message and update the UI
+                // ...
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String verificationId,
+                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                // The SMS verification code has been sent to the provided phone number, we
+                // now need to ask the user to enter the code and then construct a credential
+                // by combining the code with a verification ID.
+                Log.d(TAG, "onCodeSent:" + verificationId);
+
+                // Save verification ID and resending token so we can use them later
+//                         mVerificationId = verificationId;
+//                         mResendToken = token;
+
+                Gson gson = new Gson();
+                String chooseDeliverPoint = gson.toJson(aDeliverPointModel);
+
+                Intent anIntent = new Intent(ChooseLocationActivity.this, AskLoginVerificationCodeActivity.class);
+                anIntent.putExtra("mVerificationId",verificationId);
+                anIntent.putExtra("deliverPointObject", chooseDeliverPoint);
+                ChooseLocationActivity.this.startActivity(anIntent);
+
+                // ...
+            }
+        };
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                aDeliverPointModel.phonenumber,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                (Activity) ChooseLocationActivity.this,               // Activity (for callback binding)
+                mCallbacks);        // OnVerificationStateChangedCallbacks
     }
 
 }

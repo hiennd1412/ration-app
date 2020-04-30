@@ -51,6 +51,7 @@ public class Location_CreateNewActivity extends Location_aBaseActivity {
 
         tfDeliverPointName = (EditText) findViewById(R.id.tf_deliver_point_name);
         tfDeliverPointLocation = (EditText) findViewById(R.id.tf_deliver_point_location);
+        tfDeliverPointPhonenumber = (EditText) findViewById(R.id.tf_phone_number);
         tfStartDate = (TextView) findViewById(R.id.tf_start_date);
         tfStartDate.setKeyListener(null);
         tfEndDate = (TextView) findViewById(R.id.tf_end_date);
@@ -183,6 +184,7 @@ public class Location_CreateNewActivity extends Location_aBaseActivity {
 
         String deliverPointName = this.tfDeliverPointName.getText().toString();
         String location = this.tfDeliverPointLocation.getText().toString();
+        String phoneNumber = this.tfDeliverPointPhonenumber.getText().toString();
         String startDate = Utils.formatDateToSendToServer(Location_CreateNewActivity.this.startDate);
         String endDate = Utils.formatDateToSendToServer(Location_CreateNewActivity.this.endDate);
         String openTime = this.tfOpenTime.getText().toString();
@@ -193,9 +195,14 @@ public class Location_CreateNewActivity extends Location_aBaseActivity {
             return;
         }
         if (location.equals("")) {
-            Toast.makeText(Location_CreateNewActivity.this, "Chưa nhập Địa chỉ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Location_CreateNewActivity.this, "Chưa nhập địa chỉ", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (phoneNumber.equals("")) {
+            Toast.makeText(Location_CreateNewActivity.this, "Chưa nhập số điện thoại", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 //        if (startDate.equals("")) {
 //            Toast.makeText(Location_CreateNewActivity.this, "Chưa nhập ngày bắt đầu", Toast.LENGTH_SHORT).show();
 //            return;
@@ -274,6 +281,7 @@ public class Location_CreateNewActivity extends Location_aBaseActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("deliverPointName", Location_CreateNewActivity.this.tfDeliverPointName.getText().toString());
+                params.put("phonenumber", Location_CreateNewActivity.this.tfDeliverPointPhonenumber.getText().toString());
                 params.put("location", Location_CreateNewActivity.this.tfDeliverPointLocation.getText().toString());
                 params.put("startDate", Utils.formatDateToSendToServer(Location_CreateNewActivity.this.startDate));
                 params.put("endDate", Utils.formatDateToSendToServer(Location_CreateNewActivity.this.endDate));

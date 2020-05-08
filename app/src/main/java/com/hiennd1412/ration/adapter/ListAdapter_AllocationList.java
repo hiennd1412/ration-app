@@ -1,15 +1,19 @@
 package com.hiennd1412.ration.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.hiennd1412.ration.Entity.AllocationModel;
 import com.hiennd1412.ration.R;
 import com.hiennd1412.ration.Utils.Utils;
+import com.hiennd1412.ration.WebserviceGeneralManage.WebserviceInfors;
 
 import java.util.List;
 
@@ -65,7 +69,9 @@ public class ListAdapter_AllocationList extends BaseAdapter {
              holder = new ViewHolder();
              holder.tvAllocationPointName = (TextView) convertView.findViewById(R.id.allocation_point_name);
              holder.tvAllocationLocation = (TextView) convertView.findViewById(R.id.allocation_location);
-             holder.allocationTime = (TextView) convertView.findViewById(R.id.allocation_time);
+             holder.tvAllocationTime = (TextView) convertView.findViewById(R.id.allocation_time);
+             holder.tvAllocationPackageCount = (TextView) convertView.findViewById(R.id.allocation_package_count);
+             holder.imgAllocationImage = (ImageView) convertView.findViewById(R.id.allocation_image);
              convertView.setTag(holder);
          }
          else {
@@ -77,16 +83,22 @@ public class ListAdapter_AllocationList extends BaseAdapter {
              holder.tvAllocationPointName.setText(anAllocationModel.deliverPoint.deliverPointName);
              holder.tvAllocationLocation.setText(anAllocationModel.deliverPoint.location);
          }
-         holder.allocationTime.setText(Utils.formatDate(anAllocationModel.allowcationTime));
-
+         holder.tvAllocationTime.setText(Utils.formatDate(anAllocationModel.allowcationTime));
+         holder.tvAllocationPackageCount.setText(anAllocationModel.packageCount + " phần - ");
+         final String imageLink = WebserviceInfors.base_host_service + WebserviceInfors.loadAllocationImage + anAllocationModel.image;
+         Glide.with(this.mContext)
+                 .load(imageLink)
+                 .placeholder(R.drawable.give_gift)
+                 .into(holder.imgAllocationImage);
          return convertView;
     }
 
     private static class ViewHolder {
         public TextView tvAllocationPointName;
         public TextView tvAllocationLocation;
-        public TextView allocationTime;
-
+        public TextView tvAllocationTime;
+        public TextView tvAllocationPackageCount;
+        public ImageView imgAllocationImage;
     }
 
 }

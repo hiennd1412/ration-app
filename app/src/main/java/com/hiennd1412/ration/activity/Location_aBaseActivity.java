@@ -66,7 +66,7 @@ public class Location_aBaseActivity extends BaseActivity {
     TextView tfStartDate;
     TextView tfOpenTime;
     TextView tfCloseTime;
-    ImageView locationImage;
+    ImageView selectedImage;
 
     Date startDate;
     Date endDate;
@@ -149,7 +149,7 @@ public class Location_aBaseActivity extends BaseActivity {
                 if (resultCode == this.RESULT_OK) {
 
                     attachImageUri = result.getUri();
-                    this.locationImage.setImageURI(attachImageUri);
+                    this.selectedImage.setImageURI(attachImageUri);
 //                    File compressedImage = compressImage(new File(attachImageUri.getPath()));
 //                    this.imgQuestion.setImageURI(Uri.fromFile(compressedImage));
 
@@ -160,13 +160,13 @@ public class Location_aBaseActivity extends BaseActivity {
         }
     }
 
-    protected void uploadImage(final String imagePath, final UpLoadImageSuccessHandler handler) {
+    protected void uploadImage(final String imagePath, String uploadPath, final UpLoadImageSuccessHandler handler) {
         RequestQueue queue = VolleyRequest.getInstance(this).getRequestQueue();
         queue.getCache().clear();
 
         File compressedImage = compressImage(new File(imagePath));
 
-        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, WebserviceInfors.base_host_service + WebserviceInfors.uploadDeliverPointImage,
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, WebserviceInfors.base_host_service + uploadPath,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.hiennd1412.ration.WebserviceGeneralManage.WebserviceInfors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -51,13 +53,13 @@ public class Location_EditActivity extends Location_aBaseActivity {
 
         tfDeliverPointName = (EditText) findViewById(R.id.tf_deliver_point_name);
         tfDeliverPointLocation = (EditText) findViewById(R.id.tf_deliver_point_location);
-        tfStartDate = (EditText) findViewById(R.id.tf_start_date);
+        tfStartDate = (TextView) findViewById(R.id.tf_start_date);
         tfStartDate.setKeyListener(null);
-        tfEndDate = (EditText) findViewById(R.id.tf_end_date);
+        tfEndDate = (TextView) findViewById(R.id.tf_end_date);
         tfEndDate.setKeyListener(null);
-        tfOpenTime = (EditText) findViewById(R.id.tf_open_time);
+        tfOpenTime = (TextView) findViewById(R.id.tf_open_time);
         tfOpenTime.setKeyListener(null);
-        tfCloseTime = (EditText) findViewById(R.id.tf_close_time);
+        tfCloseTime = (TextView) findViewById(R.id.tf_close_time);
         tfCloseTime.setKeyListener(null);
 
         tfStartDate.setOnClickListener(new View.OnClickListener() {

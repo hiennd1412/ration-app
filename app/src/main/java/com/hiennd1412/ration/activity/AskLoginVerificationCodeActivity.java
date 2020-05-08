@@ -35,6 +35,8 @@ public class AskLoginVerificationCodeActivity extends BaseActivity {
     TextView tvVerificationCode;
     String choosenDeliverPoint;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

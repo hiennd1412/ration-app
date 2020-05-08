@@ -105,12 +105,12 @@ public class ChooseLocationActivity extends BaseActivity {
     }
 
     public void getDeliverPointList() {
-        showProgressDialog();
+
         if(!Utils.hasInternetConnection(ChooseLocationActivity.this)) {
             Toast.makeText(ChooseLocationActivity.this, ChooseLocationActivity.this.getResources().getString(R.string.connect_internet_alert_message), Toast.LENGTH_SHORT).show();
             return;
         }
-
+        showProgressDialog();
         RequestQueue queue = VolleyRequest.getInstance(ChooseLocationActivity.this).getRequestQueue();
 
         // Request a string response from the provided URL.

@@ -60,7 +60,7 @@ public class Location_CreateNewActivity extends Location_aBaseActivity {
         tfOpenTime.setKeyListener(null);
         tfCloseTime = (TextView) findViewById(R.id.tf_close_time);
         tfCloseTime.setKeyListener(null);
-        locationImage = (ImageView) findViewById(R.id.location_image);
+        selectedImage = (ImageView) findViewById(R.id.location_image);
 
         tfStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,7 +223,7 @@ public class Location_CreateNewActivity extends Location_aBaseActivity {
         showProgressDialog();
 
         if (attachImageUri != null) {
-            uploadImage(attachImageUri.getPath(), new UpLoadImageSuccessHandler() {
+            uploadImage(attachImageUri.getPath(), WebserviceInfors.uploadDeliverPointImage, new UpLoadImageSuccessHandler() {
                 @Override
                 public void onUploadImageSuccess(String imageName) {
                     Location_CreateNewActivity.this.addNewLocation(imageName);
@@ -241,12 +241,14 @@ public class Location_CreateNewActivity extends Location_aBaseActivity {
             Toast.makeText(Location_CreateNewActivity.this, Location_CreateNewActivity.this.getResources().getString(R.string.connect_internet_alert_message), Toast.LENGTH_SHORT).show();
             return;
         }
+        showProgressDialog();
         RequestQueue queue = VolleyRequest.getInstance(Location_CreateNewActivity.this).getRequestQueue();
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, WebserviceInfors.base_host_service + WebserviceInfors.createNewDeliverPoint,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        hideProgressDialog();
                         Log.e(TAG, response);
                         Location_CreateNewActivity.this.hideProgressDialog();
                         try {
@@ -270,6 +272,7 @@ public class Location_CreateNewActivity extends Location_aBaseActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        hideProgressDialog();
                         Log.e(TAG, "onErrorResponse: " + error.toString());
                         Location_CreateNewActivity.this.hideProgressDialog();
                         Toast.makeText(Location_CreateNewActivity.this, error.toString(), Toast.LENGTH_SHORT).show();

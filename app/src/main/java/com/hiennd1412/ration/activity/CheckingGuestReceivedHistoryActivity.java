@@ -1,5 +1,9 @@
 package com.hiennd1412.ration.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -7,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,6 +51,17 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
 
     ArrayList<AllocationModel> allocationList;
 
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getStringExtra("editAllocation");
+            if(message.equals("success")) {
+                CheckingGuestReceivedHistoryActivity.this.getHistory();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +81,14 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
         }
         setupListview();
         getHistory();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,new IntentFilter("EditAllowcationFinish"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
 
     private void setupListview() {
@@ -73,6 +98,12 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                AllocationModel anAllocationModel = (AllocationModel) listViewAdapter.getItem(i);
+                Gson gson = new Gson();
+                String choosenAllocation = gson.toJson(anAllocationModel);
+                Intent anIntent = new Intent(CheckingGuestReceivedHistoryActivity.this, AllocationDetailsActivity.class);
+                anIntent.putExtra("choosenAllocation", choosenAllocation);
+                startActivity(anIntent);
             }
         });
     }
@@ -188,6 +219,7 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.e(TAG, response);
+                        hideProgressDialog();
                         CheckingGuestReceivedHistoryActivity.this.hideProgressDialog();
                         try {
                             JSONObject jsResponse = new JSONObject(response);
@@ -207,6 +239,7 @@ public class CheckingGuestReceivedHistoryActivity extends BaseActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        hideProgressDialog();
                         Log.e(TAG, "onErrorResponse: " + error.toString());
                         CheckingGuestReceivedHistoryActivity.this.hideProgressDialog();
 //                        Toast.makeText(CheckingPhoneNumberResultActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
